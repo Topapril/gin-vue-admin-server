@@ -1,6 +1,7 @@
 package biz
 
 import (
+	"errors"
 	"time"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
@@ -42,7 +43,7 @@ func (m *MealService) GetMealList(info bizReq.MealSearch) (list interface{}, tot
 
 	// 营业日期
 	if info.BusinessDate != nil && !info.BusinessDate.IsZero() {
-		businessDateStr := info.BusinessDate.In(time.Local).Format("2006-01-02")
+		businessDateStr := info.BusinessDate.Format("2006-01-02")
 		db = db.Where("DATE(business_date) = ?", businessDateStr)
 	}
 
@@ -66,14 +67,17 @@ func (m *MealService) GetMeal(id uint) (meal biz.Meal, err error) {
 	return
 }
 
-func (m *MealService) GetMealByDate(businessDate *time.Time) (meal biz.Meal, err error) {
-	var queryDate time.Time
-	if businessDate != nil {
-		queryDate = businessDate.In(time.Local)
-	} else {
-		queryDate = time.Now().In(time.Local)
+func (m *MealService) HasDuplicateBusinessDate(businessDate *time.Time) (count int64, err error) {
+	if businessDate == nil {
+		return 0, errors.New("营业日期错误")
 	}
 
-	err = global.GVA_DB.Where("DATE(business_date) = ?", queryDate.Format("2006-01-02")).First(&meal).Error
+	err = global.GVA_DB.Model(&biz.Meal{}).Where("DATE(business_date) = ?", businessDate).Count(&count).Error
+	return count, err
+}
+
+func (m *MealService) FetchMealForToday() (meal biz.Meal, err error) {
+	businessDate := time.Now().Format("2006-01-02")
+	err = global.GVA_DB.Where("DATE(business_date) = ?", businessDate).First(&meal).Error
 	return
 }

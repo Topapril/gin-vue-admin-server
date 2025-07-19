@@ -3,7 +3,6 @@ package biz
 import (
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/biz"
@@ -72,7 +71,7 @@ func (o *OrderApi) CreateOrder(c *gin.Context) {
 			UsageCount:      order.GoodsQuantity,
 			OrderDate:       order.OrderDate,
 			TransactionType: 1,
-			Description:     order.OrderDate.In(time.Local).Format("2006-01-02") + `用餐`,
+			Description:     order.OrderDate.Format("2006-01-02") + `用餐`,
 			Remark:          order.Remark,
 		}
 
@@ -358,19 +357,38 @@ func (o *OrderApi) PrintDayOrders(c *gin.Context) {
 }
 
 func (o *OrderApi) GenerateOrder(c *gin.Context) {
-	// 查询状态正常并且总餐数大于已使用餐数的消费者
-	consumerData, err := consumerService.GetConsumerAvailableList()
+	// 获取营业状态
+	mealData, err := mealService.FetchMealForToday()
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		global.GVA_LOG.Error("查询失败", zap.Error(err))
+		response.FailWithMessage("查询失败: "+err.Error(), c)
+		return
+	}
+
+	// 是否营业
+	if mealData.BusinessStatus == 2 {
+		response.FailWithMessage("今日不营业", c)
+		return
+	}
+
+	// 查询当天是否生成过订单
+	count, err := orderService.IsOrderCreatedToday()
 	if err != nil {
 		global.GVA_LOG.Error("查询失败!", zap.Error(err))
 		response.FailWithMessage("查询失败:"+err.Error(), c)
 		return
 	}
 
-	// 获取今天的餐品
-	mealData, err := mealService.GetMealByDate(nil)
-	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		global.GVA_LOG.Error("查询失败", zap.Error(err))
-		response.FailWithMessage("查询失败: "+err.Error(), c)
+	if count > 0 {
+		response.FailWithMessage("已生成过订单", c)
+		return
+	}
+
+	// 查询状态正常并且总餐数大于已使用餐数的消费者
+	consumerData, err := consumerService.GetConsumerAvailableList()
+	if err != nil {
+		global.GVA_LOG.Error("查询失败!", zap.Error(err))
+		response.FailWithMessage("查询失败:"+err.Error(), c)
 		return
 	}
 
@@ -411,7 +429,7 @@ func (o *OrderApi) GenerateOrder(c *gin.Context) {
 				UsageCount:      1,
 				OrderDate:       mealData.BusinessDate,
 				TransactionType: 1,
-				Description:     mealData.BusinessDate.In(time.Local).Format("2006-01-02") + `用餐`,
+				Description:     mealData.BusinessDate.Format("2006-01-02") + `用餐`,
 				Remark:          consumer.Remark,
 			}
 
@@ -426,4 +444,6 @@ func (o *OrderApi) GenerateOrder(c *gin.Context) {
 			return
 		}
 	}
+
+	response.OkWithMessage("订单已生成", c)
 }

@@ -31,15 +31,15 @@ func (m *MealApi) CreateMeal(c *gin.Context) {
 	}
 
 	// 查询营业日期重复
-	_, err = mealService.GetMealByDate(meal.BusinessDate)
+	count, err := mealService.HasDuplicateBusinessDate(meal.BusinessDate)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		global.GVA_LOG.Error("查询失败", zap.Error(err))
 		response.FailWithMessage("查询失败: "+err.Error(), c)
 		return
 	}
 
-	// 日期存在
-	if err == nil {
+	// 营业日期已存在
+	if count > 0 {
 		global.GVA_LOG.Error("营业日期已存在")
 		response.FailWithMessage("营业日期已存在", c)
 		return

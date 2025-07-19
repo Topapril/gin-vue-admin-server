@@ -58,7 +58,7 @@ func (o *OrderService) GetOrderList(info bizReq.OrderSearch) (list interface{}, 
 
 	// 订单日期
 	if info.OrderDate != nil && !info.OrderDate.IsZero() {
-		orderDateStr := info.OrderDate.In(time.Local).Format("2006-01-02")
+		orderDateStr := info.OrderDate.Format("2006-01-02")
 		db = db.Where("DATE(order_date) = ?", orderDateStr)
 	}
 
@@ -83,15 +83,16 @@ func (c *OrderService) GetOrder(db *gorm.DB, id uint) (order biz.Order, err erro
 }
 
 func (o *OrderService) GetOrdersByDate(info bizReq.OrderPrintSearch) (list interface{}, err error) {
-	db := global.GVA_DB.Model(&biz.Order{})
+	var orders []biz.Order
 
-	orderDateStr := info.OrderDate.In(time.Local).Format("2006-01-02")
-	db = db.Where("DATE(order_date) = ?", orderDateStr)
+	orderDateStr := info.OrderDate.Format("2006-01-02")
+	err = global.GVA_DB.Model(&biz.Order{}).Where("DATE(order_date) = ?", orderDateStr).Order("created_at desc").Find(&orders).Error
 
-	db = db.Order("created_at desc")
+	return orders, err
+}
 
-	var order []biz.Order
-
-	err = db.Find(&order).Error
-	return order, err
+func (c *OrderService) IsOrderCreatedToday() (count int64, err error) {
+	currentDate := time.Now().Format("2006-01-02")
+	err = global.GVA_DB.Model(&biz.Order{}).Where("DATE(order_date) = ? AND order_type = ?", currentDate, 1).Count(&count).Error
+	return
 }

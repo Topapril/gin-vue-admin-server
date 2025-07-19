@@ -117,9 +117,12 @@ func (co *ConsumerApi) UpdateConsumerMealCount(c *gin.Context) {
 		return
 	}
 
-	orderDate, err := time.ParseInLocation("2006-01-02", time.Now().Format("2006-01-02"), time.Local)
+	// 字符串转时间
+	orderDate, err := time.Parse("2006-01-02", time.Now().Format("2006-01-02"))
 	if err != nil {
-		global.GVA_LOG.Error("时间转换失败!", zap.Error(err))
+		global.GVA_LOG.Error("时间转换失败", zap.Error(err))
+		response.FailWithMessage("时间转换失败:"+err.Error(), c)
+		return
 	}
 
 	consumerRecord := biz.ConsumerRecord{

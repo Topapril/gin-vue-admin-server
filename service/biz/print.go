@@ -45,7 +45,7 @@ func (p *PrintService) GetPrintInfoList(info bizReq.PrintSearch) (list interface
 
 	// 订单日期
 	if info.OrderDate != nil && !info.OrderDate.IsZero() {
-		orderDateStr := info.OrderDate.In(time.Local).Format("2006-01-02")
+		orderDateStr := info.OrderDate.Format("2006-01-02")
 		db = db.Where("DATE(order_date) = ?", orderDateStr)
 	}
 
@@ -88,7 +88,7 @@ func (p *PrintService) FeiePrinter(info biz.Print) (response.FeieResponse, error
 	content += `<BR>`
 	content += `--------------------------------`
 	content += `<BR>`
-	content += `<BOLD><L>送餐时间：` + info.OrderDate.In(time.Local).Format("2006-01-02") + `   ` + mealPeriodText + `</L></BOLD>`
+	content += `<BOLD><L>送餐时间：` + info.OrderDate.Format("2006-01-02") + `   ` + mealPeriodText + `</L></BOLD>`
 	content += `<BR>`
 	content += `<L>数量：` + strconv.Itoa(int(info.GoodsQuantity)) + `份</L>`
 	content += `<BR>`
