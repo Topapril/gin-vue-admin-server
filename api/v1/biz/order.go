@@ -359,9 +359,15 @@ func (o *OrderApi) PrintDayOrders(c *gin.Context) {
 func (o *OrderApi) GenerateOrder(c *gin.Context) {
 	// 获取营业状态
 	mealData, err := mealService.FetchMealForToday()
-	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+	if err != nil {
 		global.GVA_LOG.Error("查询失败", zap.Error(err))
 		response.FailWithMessage("查询失败: "+err.Error(), c)
+		return
+	}
+
+	// 没有营业日
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		response.FailWithMessage("找不到营业日数据", c)
 		return
 	}
 

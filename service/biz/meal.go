@@ -43,7 +43,8 @@ func (m *MealService) GetMealList(info bizReq.MealSearch) (list interface{}, tot
 
 	// 营业日期
 	if info.BusinessDate != nil && !info.BusinessDate.IsZero() {
-		businessDateStr := info.BusinessDate.Format("2006-01-02")
+		// 前端传的是UTC时间，后端需转为本地时间
+		businessDateStr := info.BusinessDate.In(time.Local).Format("2006-01-02")
 		db = db.Where("DATE(business_date) = ?", businessDateStr)
 	}
 

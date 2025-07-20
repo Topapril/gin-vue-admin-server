@@ -45,7 +45,8 @@ func (p *PrintService) GetPrintInfoList(info bizReq.PrintSearch) (list interface
 
 	// 订单日期
 	if info.OrderDate != nil && !info.OrderDate.IsZero() {
-		orderDateStr := info.OrderDate.Format("2006-01-02")
+		// 前端传的是UTC时间，后端需转为本地时间
+		orderDateStr := info.OrderDate.In(time.Local).Format("2006-01-02")
 		db = db.Where("DATE(order_date) = ?", orderDateStr)
 	}
 
