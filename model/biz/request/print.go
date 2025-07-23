@@ -7,8 +7,8 @@ import (
 )
 
 type PrintSearch struct {
-	WechatName   string     `json:"wechatName"`
-	ConsumerName string     `json:"consumerName"`
-	OrderDate    *time.Time `json:"orderDate"`
+	WechatName   string     `json:"wechatName" form:"wechatName"`
+	ConsumerName string     `json:"consumerName" form:"consumerName"`
+	OrderDate    *time.Time `json:"orderDate" form:"orderDate"`
 	request.PageInfo
 }

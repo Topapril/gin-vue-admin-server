@@ -73,7 +73,7 @@ func (b *BusinessService) HasDuplicateBusinessDate(businessDate *time.Time) (cou
 		return 0, errors.New("营业日期错误")
 	}
 
-	businessDateStr := time.Now().In(time.Local).Format("2006-01-02")
+	businessDateStr := businessDate.In(time.Local).Format("2006-01-02")
 	err = global.GVA_DB.Model(&biz.Business{}).Where("DATE(business_date) = ?", businessDateStr).Count(&count).Error
 	return count, err
 }

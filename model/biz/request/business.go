@@ -7,6 +7,6 @@ import (
 )
 
 type BusinessSearch struct {
-	BusinessDate *time.Time `json:"businessDate"`
+	BusinessDate *time.Time `json:"businessDate" form:"businessDate"`
 	request.PageInfo
 }

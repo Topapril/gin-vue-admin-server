@@ -83,7 +83,7 @@ func (p *PrintService) FeiePrinter(info biz.Print) (response.FeieResponse, error
 		mealPeriodText = text
 	}
 
-	content := `<CB>` + info.BusinessName + `</CB>`
+	content := `<CB>简卡轻食</CB>`
 	content += `<BR>`
 	content += `<BOLD><L>商品名称：` + info.GoodsName + `</L></BOLD>`
 	content += `<BR>`
@@ -103,8 +103,8 @@ func (p *PrintService) FeiePrinter(info biz.Print) (response.FeieResponse, error
 	content += `<BR>`
 	content += `<BR>`
 	content += `<QR>` + info.BusinessQrCode + `</QR>`
-	content += `<C><L>` + info.BusinessQrCodeTitle + `</L></C>`
-	content += `<C><L>有问题联系` + info.BusinessPhone + `</L></C>`
+	content += `<C><L>简卡轻食老板娘</L></C>`
+	content += `<C><L>` + info.BusinessPhone + `</L></C>`
 
 	itime := time.Now().Unix()
 	stime := strconv.FormatInt(itime, 10)

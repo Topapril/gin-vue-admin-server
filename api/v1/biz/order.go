@@ -3,6 +3,7 @@ package biz
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/biz"
@@ -68,10 +69,11 @@ func (o *OrderApi) CreateOrder(c *gin.Context) {
 			WechatName:      order.WechatName,
 			ConsumerName:    order.ConsumerName,
 			ConsumerId:      order.ConsumerId,
+			MealPeriod:      order.MealPeriod,
 			UsageCount:      order.GoodsQuantity,
 			OrderDate:       order.OrderDate,
 			TransactionType: 1,
-			Description:     order.OrderDate.Format("2006-01-02") + `用餐`,
+			Description:     order.OrderDate.In(time.Local).Format("2006-01-02") + ` 用餐`,
 			Remark:          order.Remark,
 		}
 
@@ -131,12 +133,13 @@ func (o *OrderApi) DeleteOrder(c *gin.Context) {
 		consumerRecord := biz.ConsumerRecord{
 			WechatName:      orderData.WechatName,
 			ConsumerName:    orderData.ConsumerName,
+			MealPeriod:      orderData.MealPeriod,
 			ConsumerId:      orderData.ConsumerId,
 			UsageCount:      orderData.GoodsQuantity,
 			OrderDate:       orderData.OrderDate,
 			TransactionType: 2,
-			Description:     orderData.OrderDate.Format("2006-01-02") + `订单作废`,
-			Remark:          orderData.Remark,
+			Description:     orderData.OrderDate.Format("2006-01-02") + ` 退餐`,
+			Remark:          "订单作废",
 		}
 
 		if err = consumerService.CreateConsumerRecord(tx, consumerRecord); err != nil {
@@ -249,9 +252,9 @@ func (o *OrderApi) PrintOrder(c *gin.Context) {
 		ConsumerName:        orderData.ConsumerName,
 		ConsumerPhone:       orderData.ConsumerPhone,
 		ConsumerAddress:     orderData.ConsumerAddress,
-		BusinessName:        global.GVA_CONFIG.Feie.BusinessName,
+		BusinessName:        "简卡轻食",
 		BusinessQrCode:      global.GVA_CONFIG.Feie.BusinessQrCode,
-		BusinessQrCodeTitle: global.GVA_CONFIG.Feie.BusinessQrCodeTitle,
+		BusinessQrCodeTitle: "简卡轻食老板娘",
 		BusinessPhone:       global.GVA_CONFIG.Feie.BusinessPhone,
 		Remark:              orderData.Remark,
 	}
@@ -318,9 +321,9 @@ func (o *OrderApi) PrintDayOrders(c *gin.Context) {
 			ConsumerName:        printData.ConsumerName,
 			ConsumerPhone:       printData.ConsumerPhone,
 			ConsumerAddress:     printData.ConsumerAddress,
-			BusinessName:        global.GVA_CONFIG.Feie.BusinessName,
+			BusinessName:        "简卡轻食",
 			BusinessQrCode:      global.GVA_CONFIG.Feie.BusinessQrCode,
-			BusinessQrCodeTitle: global.GVA_CONFIG.Feie.BusinessQrCodeTitle,
+			BusinessQrCodeTitle: "简卡轻食老板娘",
 			BusinessPhone:       global.GVA_CONFIG.Feie.BusinessPhone,
 			Remark:              printData.Remark,
 		}

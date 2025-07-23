@@ -11,6 +11,7 @@ type ConsumerRecord struct {
 	WechatName      string     `json:"wechatName"`
 	ConsumerId      string     `json:"consumerId"`
 	ConsumerName    string     `json:"consumerName"`
+	MealPeriod      uint       `json:"mealPeriod"`
 	UsageCount      int        `json:"usageCount"`
 	OrderDate       *time.Time `json:"orderDate" gorm:"type:date"`
 	TransactionType uint       `json:"transactionType"`

@@ -86,7 +86,7 @@ func (c *OrderService) GetOrder(db *gorm.DB, id uint) (order biz.Order, err erro
 func (o *OrderService) GetOrdersByDate(info bizReq.OrderPrintSearch) (list interface{}, err error) {
 	var orders []biz.Order
 
-	orderDateStr := info.OrderDate.Format("2006-01-02")
+	orderDateStr := info.OrderDate.In(time.Local).Format("2006-01-02")
 	err = global.GVA_DB.Model(&biz.Order{}).Where("DATE(order_date) = ?", orderDateStr).Order("created_at desc").Find(&orders).Error
 
 	return orders, err

@@ -78,14 +78,12 @@ email:
 excel:
     dir: ./resource/excel/
 feie:
-    user: ""
-    ukey: ""
-    sn: ""
-    url: ""
-    business-name: ""
-    business-qr-code: ""
-    business-qr-code-title: ""
-    business-phone: ""
+    user: 13573354000@163.com
+    ukey: 3CBxyEjgQbhaBgzz
+    sn: "934622372"
+    url: http://api.feieyun.cn/Api/Open/
+    business-qr-code: https://u.wechat.com/EDBfEbRd0ZxLmNlIkXPj1_o?s=2
+    business-phone: "15552688875"
 hua-wei-obs:
     path: you-path
     bucket: you-bucket
