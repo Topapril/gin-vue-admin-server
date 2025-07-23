@@ -12,7 +12,7 @@ type ConsumerRecord struct {
 	ConsumerId      string     `json:"consumerId"`
 	ConsumerName    string     `json:"consumerName"`
 	UsageCount      int        `json:"usageCount"`
-	OrderDate       *time.Time `json:"orderDate" time_format:"2006-01-02" gorm:"type:date"`
+	OrderDate       *time.Time `json:"orderDate" gorm:"type:date"`
 	TransactionType uint       `json:"transactionType"`
 	Description     string     `json:"description"`
 	Remark          string     `json:"remark"`

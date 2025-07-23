@@ -16,7 +16,7 @@ type Print struct {
 	ConsumerName        string     `json:"consumerName"`
 	ConsumerPhone       string     `json:"consumerPhone"`
 	ConsumerAddress     string     `json:"consumerAddress"`
-	OrderDate           *time.Time `json:"orderDate" time_format:"2006-01-02" gorm:"type:date"`
+	OrderDate           *time.Time `json:"orderDate" gorm:"type:date"`
 	BusinessQrCode      string     `json:"businessQrCode"`
 	BusinessQrCodeTitle string     `json:"businessQrCodeTitle"`
 	BusinessPhone       string     `json:"businessPhone"`

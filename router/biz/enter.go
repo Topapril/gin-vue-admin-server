@@ -6,7 +6,7 @@ import (
 
 type RouterGroup struct {
 	ConsumerRouter
-	MealRouter
+	BusinessRouter
 	OrderRouter
 	PrintRouter
 }
@@ -14,6 +14,6 @@ type RouterGroup struct {
 var (
 	consumerApi = api.ApiGroupApp.BizApiGroup.ConsumerApi
 	orderApi    = api.ApiGroupApp.BizApiGroup.OrderApi
-	mealApi     = api.ApiGroupApp.BizApiGroup.MealApi
+	businessApi = api.ApiGroupApp.BizApiGroup.BusinessApi
 	printApi    = api.ApiGroupApp.BizApiGroup.PrintApi
 )

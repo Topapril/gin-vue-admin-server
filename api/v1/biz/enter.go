@@ -4,7 +4,7 @@ import "github.com/flipped-aurora/gin-vue-admin/server/service"
 
 type ApiGroup struct {
 	ConsumerApi
-	MealApi
+	BusinessApi
 	OrderApi
 	PrintApi
 }
@@ -12,6 +12,6 @@ type ApiGroup struct {
 var (
 	consumerService = service.ServiceGroupApp.BizServiceGroup.ConsumerService
 	orderService    = service.ServiceGroupApp.BizServiceGroup.OrderService
-	mealService     = service.ServiceGroupApp.BizServiceGroup.MealService
+	businessService = service.ServiceGroupApp.BizServiceGroup.BusinessService
 	printService    = service.ServiceGroupApp.BizServiceGroup.PrintService
 )

@@ -110,7 +110,7 @@ func Routers() *gin.Engine {
 		bizRouter.InitConsumerRouter(PrivateGroup)                          // 消费者管理
 		bizRouter.InitOrderRouter(PrivateGroup)                             // 订单管理
 		bizRouter.InitPrintRouter(PrivateGroup)                             // 打印路由
-		bizRouter.InitMealRouter(PrivateGroup)                              // 餐品管理
+		bizRouter.InitBusinessRouter(PrivateGroup)                          // 营业管理
 	}
 
 	//插件路由安装

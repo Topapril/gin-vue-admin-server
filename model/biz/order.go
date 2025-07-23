@@ -17,7 +17,7 @@ type Order struct {
 	ConsumerPhone   string     `json:"consumerPhone"`
 	ConsumerAddress string     `json:"consumerAddress"`
 	DeliveryFee     float64    `json:"deliveryFee"`
-	OrderDate       *time.Time `json:"orderDate" time_format:"2006-01-02" gorm:"type:date"`
+	OrderDate       *time.Time `json:"orderDate" gorm:"type:date"`
 	OrderType       uint       `json:"orderType"`
 	OrderStatus     uint       `json:"orderStatus"`
 	Remark          string     `json:"remark"`

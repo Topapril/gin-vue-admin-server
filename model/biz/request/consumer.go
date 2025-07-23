@@ -5,13 +5,13 @@ import (
 )
 
 type ConsumerSearch struct {
-	WechatName    string `json:"wechatName" form:"wechatName"`
-	ConsumerName  string `json:"consumerName" form:"consumerName"`
-	ConsumerPhone string `json:"consumerPhone" form:"consumerPhone"`
+	WechatName    string `json:"wechatName"`
+	ConsumerName  string `json:"consumerName"`
+	ConsumerPhone string `json:"consumerPhone"`
 	request.PageInfo
 }
 
 type ConsumerRecordSearch struct {
-	ConsumerId string `json:"consumerId" form:"consumerId"`
+	ConsumerId string `json:"consumerId"`
 	request.PageInfo
 }

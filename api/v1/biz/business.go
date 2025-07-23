@@ -13,25 +13,25 @@ import (
 	"gorm.io/gorm"
 )
 
-type MealApi struct{}
+type BusinessApi struct{}
 
-func (m *MealApi) CreateMeal(c *gin.Context) {
-	var meal biz.Meal
-	err := c.ShouldBindJSON(&meal)
+func (b *BusinessApi) CreateBusiness(c *gin.Context) {
+	var business biz.Business
+	err := c.ShouldBindJSON(&business)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
 
 	// 校验参数
-	err = utils.Verify(meal, utils.MealVerify)
+	err = utils.Verify(business, utils.BusinessVerify)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
 
 	// 查询营业日期重复
-	count, err := mealService.HasDuplicateBusinessDate(meal.BusinessDate)
+	count, err := businessService.HasDuplicateBusinessDate(business.BusinessDate)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		global.GVA_LOG.Error("查询失败", zap.Error(err))
 		response.FailWithMessage("查询失败: "+err.Error(), c)
@@ -45,8 +45,8 @@ func (m *MealApi) CreateMeal(c *gin.Context) {
 		return
 	}
 
-	// 创建餐品
-	err = mealService.CreateMeal(meal)
+	// 创建营业
+	err = businessService.CreateBusiness(business)
 	if err != nil {
 		global.GVA_LOG.Error("创建失败", zap.Error(err))
 		response.FailWithMessage("创建失败", c)
@@ -56,21 +56,21 @@ func (m *MealApi) CreateMeal(c *gin.Context) {
 	response.OkWithMessage("创建成功", c)
 }
 
-func (m *MealApi) DeleteMeal(c *gin.Context) {
-	var meal biz.Meal
-	err := c.ShouldBindJSON(&meal)
+func (b *BusinessApi) DeleteBusiness(c *gin.Context) {
+	var business biz.Business
+	err := c.ShouldBindJSON(&business)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
 
-	err = utils.Verify(meal.GVA_MODEL, utils.IdVerify)
+	err = utils.Verify(business.GVA_MODEL, utils.IdVerify)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
 
-	err = mealService.DeleteMeal(meal)
+	err = businessService.DeleteBusiness(business)
 	if err != nil {
 		global.GVA_LOG.Error("删除失败!", zap.Error(err))
 		response.FailWithMessage("删除失败", c)
@@ -80,15 +80,15 @@ func (m *MealApi) DeleteMeal(c *gin.Context) {
 	response.OkWithMessage("删除成功", c)
 }
 
-func (m *MealApi) UpdateMeal(c *gin.Context) {
-	var meal biz.Meal
-	err := c.ShouldBindJSON(&meal)
+func (b *BusinessApi) UpdateBusiness(c *gin.Context) {
+	var business biz.Business
+	err := c.ShouldBindJSON(&business)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
 
-	err = mealService.UpdateMeal(meal)
+	err = businessService.UpdateBusiness(business)
 	if err != nil {
 		global.GVA_LOG.Error("更新失败!", zap.Error(err))
 		response.FailWithMessage("更新失败:"+err.Error(), c)
@@ -98,15 +98,15 @@ func (m *MealApi) UpdateMeal(c *gin.Context) {
 	response.OkWithMessage("更新成功", c)
 }
 
-func (m *MealApi) UpdateMealStatus(c *gin.Context) {
-	var meal biz.Meal
-	err := c.ShouldBindJSON(&meal)
+func (b *BusinessApi) UpdateBusinessStatus(c *gin.Context) {
+	var business biz.Business
+	err := c.ShouldBindJSON(&business)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
 
-	err = mealService.UpdateStatus(meal)
+	err = businessService.UpdateBusinessStatus(business)
 	if err != nil {
 		global.GVA_LOG.Error("更新失败!", zap.Error(err))
 		response.FailWithMessage("更新失败:"+err.Error(), c)
@@ -116,8 +116,8 @@ func (m *MealApi) UpdateMealStatus(c *gin.Context) {
 	response.OkWithMessage("更新成功", c)
 }
 
-func (m *MealApi) GetMealList(c *gin.Context) {
-	var pageInfo bizReq.MealSearch
+func (b *BusinessApi) GetBusinessList(c *gin.Context) {
+	var pageInfo bizReq.BusinessSearch
 	err := c.ShouldBindQuery(&pageInfo)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
@@ -130,7 +130,7 @@ func (m *MealApi) GetMealList(c *gin.Context) {
 		return
 	}
 
-	mealList, total, err := mealService.GetMealList(pageInfo)
+	businessList, total, err := businessService.GetBusinessList(pageInfo)
 	if err != nil {
 		global.GVA_LOG.Error("获取失败!", zap.Error(err))
 		response.FailWithMessage("获取失败"+err.Error(), c)
@@ -138,28 +138,28 @@ func (m *MealApi) GetMealList(c *gin.Context) {
 	}
 
 	response.OkWithDetailed(response.PageResult{
-		List:     mealList,
+		List:     businessList,
 		Total:    total,
 		Page:     pageInfo.Page,
 		PageSize: pageInfo.PageSize,
 	}, "获取成功", c)
 }
 
-func (m *MealApi) GetMeal(c *gin.Context) {
-	var meal biz.Meal
-	err := c.ShouldBindQuery(&meal)
+func (b *BusinessApi) GetBusiness(c *gin.Context) {
+	var business biz.Business
+	err := c.ShouldBindQuery(&business)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
 
-	err = utils.Verify(meal.GVA_MODEL, utils.IdVerify)
+	err = utils.Verify(business.GVA_MODEL, utils.IdVerify)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
 
-	data, err := mealService.GetMeal(meal.ID)
+	data, err := businessService.GetBusiness(business.ID)
 	if err != nil {
 		global.GVA_LOG.Error("查询失败!", zap.Error(err))
 		response.FailWithMessage("查询失败:"+err.Error(), c)

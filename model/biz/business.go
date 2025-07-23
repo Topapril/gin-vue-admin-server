@@ -6,9 +6,9 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 )
 
-type Meal struct {
+type Business struct {
 	global.GVA_MODEL
-	BusinessDate      *time.Time `json:"businessDate" time_format:"2006-01-02" gorm:"type:date"`
+	BusinessDate      *time.Time `json:"businessDate"`
 	LunchName         string     `json:"lunchName"`
 	LunchDescription  string     `json:"lunchDescription"`
 	DinnerName        string     `json:"dinnerName"`
@@ -19,6 +19,6 @@ type Meal struct {
 	Remark            string     `json:"remark"`
 }
 
-func (Meal) TableName() string {
-	return "biz_meal"
+func (Business) TableName() string {
+	return "biz_business"
 }

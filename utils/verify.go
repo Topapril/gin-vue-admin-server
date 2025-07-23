@@ -29,7 +29,7 @@ var (
 	OrderVerify = Rules{"ConsumerId": {NotEmpty()}, "ConsumerName": {NotEmpty()}, "ConsumerPhone": {NotEmpty()}, "ConsumerAddress": {NotEmpty()}, "GoodsName": {NotEmpty()}, "GoodsQuantity": {NotEmpty()}, "MealPeriod": {NotEmpty()}, "OrderType": {NotEmpty()}, "DeliveryDate": {NotEmpty()}}
 
 	// 餐品参数校验
-	MealVerify = Rules{"LunchName": {NotEmpty()}, "DinnerName": {NotEmpty()}, "businessDate": {NotEmpty()}}
+	BusinessVerify = Rules{"LunchName": {NotEmpty()}, "DinnerName": {NotEmpty()}, "BusinessDate": {NotEmpty()}}
 
 	// 消费者ID校验
 	ConsumerIdVerify = Rules{"ConsumerId": {NotEmpty()}}
