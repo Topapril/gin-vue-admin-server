@@ -2,6 +2,7 @@ package biz
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/biz"
@@ -45,11 +46,45 @@ func (b *BusinessApi) CreateBusiness(c *gin.Context) {
 		return
 	}
 
-	// 创建营业
-	err = businessService.CreateBusiness(business)
-	if err != nil {
-		global.GVA_LOG.Error("创建失败", zap.Error(err))
-		response.FailWithMessage("创建失败", c)
+	// 开启事务
+	if err := global.GVA_DB.Transaction(func(tx *gorm.DB) error {
+		// 查询消费者数据
+		consumerList, err := consumerService.GetConsumerAvailableList()
+		if err != nil {
+			return fmt.Errorf("查询消费者失败: %w", err)
+		}
+
+		// 创建营业
+		err = businessService.CreateBusiness(business)
+		if err != nil {
+			return fmt.Errorf("创建失败: %w", err)
+		}
+
+		// 给默认用餐消费者插入预约订单
+		for _, consumerData := range consumerList {
+			reservationRecord := biz.Reservation{
+				WechatName:      consumerData.WechatName,
+				ConsumerId:      consumerData.ConsumerId.String(),
+				ConsumerName:    consumerData.ConsumerName,
+				ConsumerAddress: consumerData.ConsumerAddress,
+				MealPeriod:      1,
+				GoodsName:       business.LunchName,
+				GoodsQuantity:   1,
+				ReservationDate: business.BusinessDate,
+				// 默认已预约
+				ReservationStatus: 1,
+				Remark:            consumerData.Remark,
+			}
+
+			if err = reservationService.CreateReservation(tx, reservationRecord); err != nil {
+				return fmt.Errorf("创建消费记录失败: %w", err)
+			}
+		}
+
+		return nil
+	}); err != nil {
+		global.GVA_LOG.Error("营业创建失败!", zap.Error(err))
+		response.FailWithMessage("营业创建失败："+err.Error(), c)
 		return
 	}
 

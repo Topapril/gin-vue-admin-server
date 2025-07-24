@@ -6,11 +6,17 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/biz"
 	bizReq "github.com/flipped-aurora/gin-vue-admin/server/model/biz/request"
+	"gorm.io/gorm"
 )
 
 type ReservationService struct{}
 
 var ReservationServiceApp = new(ReservationService)
+
+func (r *ReservationService) CreateReservation(db *gorm.DB, reservation biz.Reservation) (err error) {
+	err = db.Create(&reservation).Error
+	return err
+}
 
 func (r *ReservationService) UpdateReservation(reservation biz.Reservation) (err error) {
 	err = global.GVA_DB.Model(&biz.Reservation{}).Where("id = ?", reservation.ID).Select("meal_period", "consumer_address", "delivery_fee", "remark").Updates(&reservation).Error
