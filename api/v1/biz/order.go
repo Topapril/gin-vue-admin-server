@@ -91,7 +91,7 @@ func (o *OrderApi) CreateOrder(c *gin.Context) {
 	response.OkWithMessage("创建成功", c)
 }
 
-func (o *OrderApi) DeleteOrder(c *gin.Context) {
+func (o *OrderApi) RevokeOrder(c *gin.Context) {
 	var order biz.Order
 	err := c.ShouldBindJSON(&order)
 	if err != nil {
@@ -119,11 +119,6 @@ func (o *OrderApi) DeleteOrder(c *gin.Context) {
 			return fmt.Errorf("更新订单状态失败: %w", err)
 		}
 
-		// 删除订单
-		if err = orderService.DeleteOrder(tx, order); err != nil {
-			return fmt.Errorf("删除订单失败!: %w", err)
-		}
-
 		// 更新消费者使用次数, true = 加餐
 		if err := consumerService.SubConsumerUsageCount(tx, orderData.ConsumerId, orderData.GoodsQuantity); err != nil {
 			return fmt.Errorf("更新使用次数失败: %w", err)
@@ -139,7 +134,7 @@ func (o *OrderApi) DeleteOrder(c *gin.Context) {
 			OrderDate:       orderData.OrderDate,
 			TransactionType: 2,
 			Description:     orderData.OrderDate.Format("2006-01-02") + ` 退餐`,
-			Remark:          "订单作废",
+			Remark:          "订单撤销",
 		}
 
 		if err = consumerService.CreateConsumerRecord(tx, consumerRecord); err != nil {
@@ -148,12 +143,12 @@ func (o *OrderApi) DeleteOrder(c *gin.Context) {
 
 		return nil
 	}); err != nil {
-		global.GVA_LOG.Error("删除订单失败!", zap.Error(err))
-		response.FailWithMessage("删除订单失败："+err.Error(), c)
+		global.GVA_LOG.Error("撤销订单失败!", zap.Error(err))
+		response.FailWithMessage("撤销订单失败："+err.Error(), c)
 		return
 	}
 
-	response.OkWithMessage("删除成功", c)
+	response.OkWithMessage("已撤销", c)
 }
 
 func (o *OrderApi) UpdateOrder(c *gin.Context) {
@@ -416,7 +411,7 @@ func (o *OrderApi) GenerateOrder(c *gin.Context) {
 				ConsumerAddress: consumer.ConsumerAddress,
 				DeliveryFee:     consumer.DeliveryFee,
 				OrderDate:       mealData.BusinessDate,
-				OrderType:       1,
+				OrderSource:     1,
 				OrderStatus:     1,
 				Remark:          consumer.Remark,
 			}

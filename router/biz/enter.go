@@ -9,11 +9,13 @@ type RouterGroup struct {
 	BusinessRouter
 	OrderRouter
 	PrintRouter
+	ReservationRouter
 }
 
 var (
-	consumerApi = api.ApiGroupApp.BizApiGroup.ConsumerApi
-	orderApi    = api.ApiGroupApp.BizApiGroup.OrderApi
-	businessApi = api.ApiGroupApp.BizApiGroup.BusinessApi
-	printApi    = api.ApiGroupApp.BizApiGroup.PrintApi
+	consumerApi    = api.ApiGroupApp.BizApiGroup.ConsumerApi
+	orderApi       = api.ApiGroupApp.BizApiGroup.OrderApi
+	businessApi    = api.ApiGroupApp.BizApiGroup.BusinessApi
+	printApi       = api.ApiGroupApp.BizApiGroup.PrintApi
+	reservationApi = api.ApiGroupApp.BizApiGroup.ReservationApi
 )

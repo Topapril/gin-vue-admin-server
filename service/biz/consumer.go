@@ -21,8 +21,8 @@ func (c *ConsumerService) DeleteConsumer(consumer biz.Consumer) (err error) {
 	return err
 }
 
-func (c *ConsumerService) UpdateConsumer(consumers biz.Consumer) (err error) {
-	err = global.GVA_DB.Model(&biz.Consumer{}).Where("id = ?", consumers.ID).Updates(&consumers).Error
+func (c *ConsumerService) UpdateConsumer(consumer biz.Consumer) (err error) {
+	err = global.GVA_DB.Model(&biz.Consumer{}).Where("id = ?", consumer.ID).Updates(&consumer).Error
 	return err
 }
 

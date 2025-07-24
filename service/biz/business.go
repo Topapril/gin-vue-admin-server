@@ -48,7 +48,12 @@ func (b *BusinessService) GetBusinessList(info bizReq.BusinessSearch) (list inte
 		db = db.Where("DATE(business_date) = ?", businessDateStr)
 	}
 
-	db = db.Order("created_at desc")
+	// 营业状态
+	if info.BusinessStatus != 0 {
+		db = db.Where("business_status = ?", info.BusinessStatus)
+	}
+
+	db = db.Order("business_date desc")
 
 	err = db.Count(&total).Error
 	if err != nil {

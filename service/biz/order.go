@@ -18,11 +18,6 @@ func (o *OrderService) CreateOrder(db *gorm.DB, order biz.Order) (err error) {
 	return err
 }
 
-func (o *OrderService) DeleteOrder(db *gorm.DB, order biz.Order) (err error) {
-	err = db.Delete(&order).Error
-	return err
-}
-
 func (o *OrderService) UpdateOrder(order biz.Order) (err error) {
 	err = global.GVA_DB.Model(&biz.Order{}).Where("id = ?", order.ID).Select("meal_period", "consumer_address", "delivery_fee", "remark").Updates(&order).Error
 	return err

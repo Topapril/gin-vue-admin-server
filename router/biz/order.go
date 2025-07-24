@@ -13,8 +13,8 @@ func (o *OrderRouter) InitOrderRouter(Router *gin.RouterGroup) {
 	{
 		// 创建订单
 		orderRouter.POST("create", orderApi.CreateOrder)
-		// 删除订单
-		orderRouter.DELETE("delete", orderApi.DeleteOrder)
+		// 撤销订单
+		orderRouter.PUT("revoke", orderApi.RevokeOrder)
 		// 更新订单
 		orderRouter.PUT("update", orderApi.UpdateOrder)
 		// 打印订单

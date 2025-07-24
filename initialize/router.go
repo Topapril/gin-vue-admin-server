@@ -84,8 +84,9 @@ func Routers() *gin.Engine {
 		})
 	}
 	{
-		systemRouter.InitBaseRouter(PublicGroup) // 注册基础功能路由 不做鉴权
-		systemRouter.InitInitRouter(PublicGroup) // 自动初始化相关
+		systemRouter.InitBaseRouter(PublicGroup)     // 注册基础功能路由 不做鉴权
+		systemRouter.InitInitRouter(PublicGroup)     // 自动初始化相关
+		bizRouter.InitReservationRouter(PublicGroup) //预约管理
 	}
 
 	{
@@ -109,8 +110,8 @@ func Routers() *gin.Engine {
 		exampleRouter.InitAttachmentCategoryRouterRouter(PrivateGroup)      // 文件上传下载分类
 		bizRouter.InitConsumerRouter(PrivateGroup)                          // 消费者管理
 		bizRouter.InitOrderRouter(PrivateGroup)                             // 订单管理
-		bizRouter.InitPrintRouter(PrivateGroup)                             // 打印路由
 		bizRouter.InitBusinessRouter(PrivateGroup)                          // 营业管理
+		bizRouter.InitPrintRouter(PrivateGroup)                             // 打印管理
 	}
 
 	//插件路由安装

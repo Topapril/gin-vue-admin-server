@@ -11,6 +11,7 @@ type OrderSearch struct {
 	ConsumerName  string     `json:"consumerName" form:"consumerName"`
 	ConsumerPhone string     `json:"consumerPhone" form:"consumerPhone"`
 	OrderDate     *time.Time `json:"orderDate" form:"orderDate"`
+	OrderStatus   uint       `json:"orderStatus" form:"orderStatus"`
 	request.PageInfo
 }
 

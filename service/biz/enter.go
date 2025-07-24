@@ -5,4 +5,5 @@ type ServiceGroup struct {
 	OrderService
 	BusinessService
 	PrintService
+	ReservationService
 }
